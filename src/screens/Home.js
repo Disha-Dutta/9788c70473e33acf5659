@@ -7,8 +7,9 @@ import {
   Button,
   FlatList,
 } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const [value, onChangeText] = React.useState("");
   const [countries, setCountries] = React.useState(null);
 
@@ -16,6 +17,8 @@ export default function HomeScreen() {
     fetch("https://restcountries.eu/rest/v2/name/" + value)
       .then((res) => res.json())
       .then((res) => setCountries(res));
+
+  const navigateToCountry = (data) => navigation.navigate("Country", { data });
 
   return (
     <View style={styles.root} contenContainerStyle={styles.container}>
@@ -30,10 +33,11 @@ export default function HomeScreen() {
         <FlatList
           data={countries}
           renderItem={({ item }) => (
-            <View>
+            <TouchableOpacity onPress={() => navigateToCountry(item)}>
               <Text>{item.name}</Text>
-            </View>
+            </TouchableOpacity>
           )}
+          keyExtractor={(item) => item.name}
         />
       </View>
     </View>
