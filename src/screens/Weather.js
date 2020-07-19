@@ -1,7 +1,13 @@
 import React, { useEffect } from "react";
-import { View, Text, Image, Button } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Button,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import RowItem from "../components/RowItem";
-import * as Svg from "react-native-svg";
 
 export default function Weather({ route, navigation }) {
   const { data } = route.params;
@@ -16,21 +22,53 @@ export default function Weather({ route, navigation }) {
       .then((res) => setWeather(res));
   }, [data]);
 
-  if (!weather) return <Text>...Loading</Text>;
-
+  if (!weather)
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="small" />
+      </View>
+    );
+  const weatherData = weather.current || {};
   return (
-    <View>
-      <RowItem
-        label="Temperature"
-        value={weather.current.temperature + " deg"}
-      />
-      <RowItem label="Wind Speed" value={weather.current.wind_speed} />
-      <RowItem label="Precipitation" value={weather.current.precip} />
-      <Image
-        source={{ uri: weather.current.weather_icons[0] }}
-        style={{ width: "100%", height: 200 }}
-        resizeMode="contain"
-      />
+    <View style={styles.root}>
+      {!!weatherData.weather_icons && (
+        <View style={styles.imageContainer}>
+          <Image
+            source={{ uri: weatherData.weather_icons[0] }}
+            style={styles.image}
+            resizeMode="contain"
+          />
+        </View>
+      )}
+      {!!weatherData.temperature && (
+        <RowItem label="Temperature" value={weatherData.temperature + " deg"} />
+      )}
+      {!!weatherData.wind_speed && (
+        <RowItem label="Wind Speed" value={weatherData.wind_speed} />
+      )}
+      {!!weatherData.precip && (
+        <RowItem label="Precipitation" value={weatherData.precip} />
+      )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    paddingHorizontal: 8,
+    marginTop: 12,
+  },
+  loaderContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  image: {
+    width: 90,
+    height: 90,
+  },
+  imageContainer: {
+    marginVertical: 8,
+    paddingHorizontal: 8,
+  },
+});

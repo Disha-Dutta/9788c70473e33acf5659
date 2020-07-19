@@ -6,6 +6,7 @@ import {
   TextInput,
   Button,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -13,10 +14,14 @@ export default function HomeScreen({ navigation }) {
   const [value, onChangeText] = React.useState("");
   const [countries, setCountries] = React.useState(null);
 
-  const apiCall = (value) =>
+  const [fetching, setFetching] = React.useState(false);
+  const apiCall = (value) => {
+    setFetching(true);
     fetch("https://restcountries.eu/rest/v2/name/" + value)
       .then((res) => res.json())
-      .then((res) => setCountries(res));
+      .then((res) => setCountries(res))
+      .finally(() => setFetching(false));
+  };
 
   const navigateToCountry = (data) => navigation.navigate("Country", { data });
 
@@ -38,6 +43,8 @@ export default function HomeScreen({ navigation }) {
       </View>
       <View style={styles.countryHolder}>
         <Text style={styles.heading}>Select Your Country</Text>
+
+        {fetching && <ActivityIndicator size="small" />}
 
         <FlatList
           data={countries}
