@@ -4,20 +4,21 @@ import { View, StyleSheet, Text } from "react-native";
 const styles = StyleSheet.create({
   root: {
     flexDirection: "row",
+    padding: 8,
   },
   valueContainer: {
     flex: 1,
     paddingLeft: 8,
   },
   label: {
-    fontWeight: "500",
+    fontWeight: "bold",
   },
 });
 export default function RowItem({ label, value }) {
   return (
     <View style={styles.root}>
-      <View style={StyleSheet.label}>
-        <Text>{label}</Text>
+      <View>
+        <Text style={styles.label}>{label}</Text>
       </View>
       <View style={styles.valueContainer}>
         <Text>{value}</Text>

@@ -22,18 +22,30 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.root} contenContainerStyle={styles.container}>
-      <TextInput
-        style={{ height: 40, borderColor: "gray", borderWidth: 1 }}
-        onChangeText={(text) => onChangeText(text)}
-        placeholder="Enter Country"
-        value={value}
-      />
-      <Button title="Submit" onPress={() => apiCall(value)} disabled={!value} />
+      <View style={styles.form}>
+        <TextInput
+          style={styles.input}
+          onChangeText={(text) => onChangeText(text)}
+          placeholder="Enter Country"
+          value={value}
+        />
+        <Button
+          title="Submit"
+          onPress={() => apiCall(value)}
+          disabled={!value}
+          style={styles.button}
+        />
+      </View>
       <View style={styles.countryHolder}>
+        <Text style={styles.heading}>Select Your Country</Text>
+
         <FlatList
           data={countries}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => navigateToCountry(item)}>
+            <TouchableOpacity
+              onPress={() => navigateToCountry(item)}
+              style={styles.item}
+            >
               <Text>{item.name}</Text>
             </TouchableOpacity>
           )}
@@ -51,5 +63,23 @@ const styles = StyleSheet.create({
   },
   countryHolder: {
     width: "100%",
+    paddingHorizontal: 8,
+  },
+  form: {
+    padding: 8,
+  },
+  input: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: 12,
+    paddingHorizontal: 8,
+  },
+  heading: {
+    fontSize: 22,
+    marginBottom: 8,
+  },
+  item: {
+    padding: 8,
   },
 });
